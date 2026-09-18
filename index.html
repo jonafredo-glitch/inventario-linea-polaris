@@ -431,7 +431,7 @@
       <section class="setup">
         <div class="panel">
           <div class="head">
-            <h3>1. SELECCIONAR HASTA DOS MODELOS</h3><span id="modelSummary"></span>
+            <h3>1. SELECCIONAR HASTA 10 MODELOS</h3><span id="modelSummary"></span>
           </div>
           <div class="body">
             <div class="selector"><select id="modelSelect"></select><input id="modelUnits" type="number" min="0" value="1" placeholder="Unidades"></div><button class="btn btn-blue" onclick="addModel()">Agregar modelo</button>
@@ -447,7 +447,7 @@
         </div>
       </section>
       <section class="kpis">
-        <div class="kpi"><span>Modelos</span><strong id="kModels">0</strong><small>Máximo 2</small></div>
+        <div class="kpi"><span>Modelos</span><strong id="kModels">0</strong><small>Máximo 10</small></div>
         <div class="kpi"><span>Unidades</span><strong id="kUnits">0</strong><small>Programadas</small></div>
         <div class="kpi"><span>Partes BOM</span><strong id="kParts">0</strong><small>Consolidadas</small></div>
         <div class="kpi"><span>Inventario actual</span><strong id="kInventory">0</strong><small>Después de consumo</small></div>
@@ -28447,7 +28447,7 @@
           units = +modelUnits.value || 0;
         if (!code) return;
         if (state.selected.some(x => x.code === code)) return alert('El modelo ya está seleccionado.');
-        if (state.selected.length >= 2) return alert('Selecciona máximo dos modelos.');
+        if (state.selected.length >= 10) return alert('Puedes seleccionar máximo 10 modelos.');
         state.selected.push({
           code,
           units
