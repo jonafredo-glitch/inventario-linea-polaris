@@ -28407,8 +28407,15 @@
       };
 
       function save() {
-        localStorage.setItem('polarisInv54', JSON.stringify(state))
-      }
+
+    localStorage.setItem(
+        'polarisInv54',
+        JSON.stringify(state)
+    );
+
+    guardarEstadoSupabase();
+
+}
 
       function done() {
         const n = new Date(),
@@ -28430,7 +28437,7 @@
         const groups = {};
         SOURCE.models.forEach(m => {
           const p = m.platform || m.code.slice(0, 4);
-          (groups[p] ??= []).push(m);
+          (groups[p] ??= []).push(m)
         });
         modelSelect.innerHTML = '<option value="">Seleccionar modelo...</option>' + Object.entries(groups).map(([g, a]) => `<optgroup label="${esc(g)}">${a.map(m=>`<option value="${m.code}">${m.code}</option>`).join('')}</optgroup>`).join('')
       }
@@ -28568,7 +28575,77 @@
         day: 'numeric'
       });
       render();
-      setInterval(render, 60000);
+
+cargarEstadoSupabase();
+
+setInterval(render, 60000);
     </script>
-  </body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const supabaseUrl =
+'https://ychaxnslpezpgczldynu.supabase.co';
+
+const supabaseKey =
+'sb_publishable_pSqn7C_wB989ogGHWYrICw_C5huj79v';
+
+const supabaseClient =
+supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+);
+
+console.log('Supabase conectado');
+async function pruebaSupabase() {
+
+  const { data, error } = await supabaseClient
+    .from('modelos')
+    .select('*')
+    .limit(1);
+
+  console.log('DATA:', data);
+  console.log('ERROR:', error);
+}
+
+pruebaSupabase();
+async function guardarEstadoSupabase() {
+
+  const { error } = await supabaseClient
+    .from('corridas')
+    .insert({
+      fecha: new Date().toISOString().split('T')[0],
+      datos: state
+    });
+
+  if (error) {
+    console.error(error);
+  }
+
+}
+
+async function cargarEstadoSupabase() {
+
+  const { data, error } = await supabaseClient
+  .from('corridas')
+  .select('datos')
+  .order('created_at', { ascending: false })
+  .limit(1);
+
+ if (!error && data?.length) {
+
+    state = data[0].datos;
+
+    render();
+
+console.log('Estado cargado desde Supabase');
+
+  }
+
+}
+
+cargarEstadoSupabase();
+
+</script>
+
+</body>
 </html>
