@@ -28430,7 +28430,7 @@
         const groups = {};
         SOURCE.models.forEach(m => {
           const p = m.platform || m.code.slice(0, 4);
-          (groups[p] ?? = []).push(m)
+          (groups[p] ??= []).push(m);
         });
         modelSelect.innerHTML = '<option value="">Seleccionar modelo...</option>' + Object.entries(groups).map(([g, a]) => `<optgroup label="${esc(g)}">${a.map(m=>`<option value="${m.code}">${m.code}</option>`).join('')}</optgroup>`).join('')
       }
@@ -28464,7 +28464,7 @@
       function consolidated() {
         const map = {};
         state.selected.forEach(sel => (SOURCE.bom[sel.code] || []).forEach(p => {
-          const x = map[p.part] ?? = {
+          const x = map[p.part] ??= {
             ...p,
             required: 0,
             detail: []
@@ -28570,34 +28570,5 @@
       render();
       setInterval(render, 60000);
     </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const supabaseUrl =
-'https://ychaxnslpezpgczldynu.supabase.co';
-
-const supabaseKey =
-'sb_publishable_pSqn7C_wB989ogGHWYrICw_C5huj79v';
-
-const supabaseClient =
-supabase.createClient(
-  supabaseUrl,
-  supabaseKey
-);
-
-console.log('Supabase conectado');
-async function pruebaSupabase() {
-
-  const { data, error } = await supabaseClient
-    .from('modelos')
-    .select('*')
-    .limit(1);
-
-  console.log('DATA:', data);
-  console.log('ERROR:', error);
-}
-
-pruebaSupabase();
-</script>
   </body>
 </html>
