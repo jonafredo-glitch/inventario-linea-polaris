@@ -28542,7 +28542,7 @@
         const a = parts.filter(p => ['critical', 'risk', 'need'].includes(status(p.part, p.required))).slice(0, 12);
         alerts.innerHTML = a.length ? a.map(p => {
           const s = status(p.part, p.required);
-          return `<div class="alert ${s==='risk'?'warn':''}"><b>${esc(p.part)} · ${fmt(current(p.part))} pzas</b><small>Requeridas ${fmt(p.required)} · ${esc(p.desc)}</small></div>`
+          return `<div class="alert ${s==='risk'?'warn':''}"><b>${esc(p.part)} · ${fmt(current(p.part))} pzas</b><small>Req: ${fmt(p.required)}</small></div>`
         }).join('') : '<div class="empty">Sin alertas activas.</div>'
       }
 
