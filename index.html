@@ -28499,17 +28499,11 @@ state.linea = state.linea || {};
       }
 
       function current(part) {
-
-  const total =
-    (+state.proceso[part] || 0) +
-    (+state.descarga[part] || 0) +
-    (+state.linea[part] || 0);
-
   return Math.max(
     0,
-    total - done() * (+state.rate || 15)
+    (+state.inventory[part] || 0) - done() * (+state.rate || 15)
   );
-      }
+}
 
       function status(part, required) {
         const c = current(part);
