@@ -28645,7 +28645,13 @@ console.log('Estado cargado desde Supabase');
 }
 
 cargarEstadoSupabase();
-
+setInterval(async () => {
+  try {
+    await cargarEstadoSupabase();
+  } catch (e) {
+    console.error('Auto Refresh Error:', e);
+  }
+}, 5000);
 </script>
 
 </body>
