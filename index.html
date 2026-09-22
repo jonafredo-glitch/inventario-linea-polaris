@@ -28410,8 +28410,9 @@
   linea: {},
   close: {},
   rate: 15
-      };
-      state.proceso = state.proceso || {};
+};
+
+state.proceso = state.proceso || {};
 state.descarga = state.descarga || {};
 state.linea = state.linea || {};
 
@@ -28527,10 +28528,11 @@ state.linea = state.linea || {};
           risk = 0,
           short = 0;
         rows.innerHTML = parts.length ? parts.map(p => {
-          const inv =
-  (+state.proceso[p.part] || 0) +
-  (+state.descarga[p.part] || 0) +
-  (+state.linea[p.part] || 0),
+const inv =
+  (+state.proceso?.[p.part] || 0) +
+  (+state.descarga?.[p.part] || 0) +
+  (+state.linea?.[p.part] || 0),
+``
             cur = current(p.part),
             S = status(p.part, p.required),
             variance = cur - p.required,
