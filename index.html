@@ -28403,10 +28403,13 @@
         ['15:00–15:30', 16.5]
       ];
       let state = JSON.parse(localStorage.getItem('polarisInv54') || 'null') || {
-        selected: [],
-        inventory: {},
-        close: {},
-        rate: 15
+  selected: [],
+  inventory: {},
+  proceso: {},
+  descarga: {},
+  linea: {},
+  close: {},
+  rate: 15
       };
 
       function save() {
@@ -28492,7 +28495,16 @@
       }
 
       function current(part) {
-        return Math.max(0, (+state.inventory[part] || 0) - done() * (+state.rate || 15))
+
+  const total =
+    (+state.proceso[part] || 0) +
+    (+state.descarga[part] || 0) +
+    (+state.linea[part] || 0);
+
+  return Math.max(
+    0,
+    total - done() * (+state.rate || 15)
+  );
       }
 
       function status(part, required) {
@@ -28512,7 +28524,10 @@
           risk = 0,
           short = 0;
         rows.innerHTML = parts.length ? parts.map(p => {
-          const inv = +state.inventory[p.part] || 0,
+          const inv =
+  (+state.proceso[p.part] || 0) +
+  (+state.descarga[p.part] || 0) +
+  (+state.linea[p.part] || 0),
             cur = current(p.part),
             S = status(p.part, p.required),
             variance = cur - p.required,
@@ -28521,7 +28536,24 @@
           if (S === 'critical') crit++;
           if (S === 'risk') risk++;
           if (variance < 0) short++;
-          return `<tr><td><b>${esc(p.part)}</b></td><td>${esc(p.desc)}</td><td>${esc(p.station)}</td><td>${esc(p.category)}</td><td>${esc(p.criticality)}</td><td title="${esc(p.detail.join(' | '))}" class="qty">${fmt(p.required)}</td><td><input class="num" type="number" min="0" value="${inv}" onchange="state.inventory['${p.part}']=+this.value;save();render()"></td><td>−${D*(+state.rate||15)}</td><td class="qty">${fmt(cur)}</td><td>${variance>=0?'+':''}${fmt(variance)}</td><td><input class="num" type="number" min="0" value="${close}" placeholder="Pend." onchange="state.close['${p.part}']=this.value;save()"></td><td><span class="pill ${S}">${S==='critical'?'CRÍTICO':S==='risk'?'RIESGO':S==='need'?'FALTANTE':'OK'}</span></td></tr>`
+          return `<tr><td><b>${esc(p.part)}</b></td><td>${esc(p.desc)}</td><td>${esc(p.station)}</td><td>${esc(p.category)}</td><td>${esc(p.criticality)}</td><td title="${esc(p.detail.join(' | '))}" class="qty">${fmt(p.required)}</td><td>
+<input class="num" type="number" min="0"
+value="${state.proceso[p.part]||0}"
+onchange="state.proceso['${p.part}']=+this.value;save();render()">
+</td>
+
+<td>
+<input class="num" type="number" min="0"
+value="${state.descarga[p.part]||0}"
+onchange="state.descarga['${p.part}']=+this.value;save();render()">
+</td>
+
+<td>
+<input class="num" type="number" min="0"
+value="${state.linea[p.part]||0}"
+onchange="state.linea['${p.part}']=+this.value;save();render()">
+</td>
+<td>−${D*(+state.rate||15)}</td><td class="qty">${fmt(cur)}</td><td>${variance>=0?'+':''}${fmt(variance)}</td><td><input class="num" type="number" min="0" value="${close}" placeholder="Pend." onchange="state.close['${p.part}']=this.value;save()"></td><td><span class="pill ${S}">${S==='critical'?'CRÍTICO':S==='risk'?'RIESGO':S==='need'?'FALTANTE':'OK'}</span></td></tr>`
         }).join('') : '<tr><td colspan="12" class="empty">Selecciona uno o dos modelos para desplegar su BOM.</td></tr>';
         const units = state.selected.reduce((a, x) => a + x.units, 0);
         kModels.textContent = state.selected.length;
